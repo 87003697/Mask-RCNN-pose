@@ -36,7 +36,7 @@ import detectron2.utils.comm as comm
 from detectron2.utils.logger import setup_logger
 
 import pdb
-
+import multi
 
 class Trainer(DefaultTrainer):
 
@@ -77,20 +77,6 @@ class Trainer(DefaultTrainer):
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
         return COCOEvaluator(dataset_name, cfg, True, output_folder)
-
-# by Zhiyuan Ma #######
-def add_our_config(cfg):
-    _C = cfg
-    _C.OURS = CN()
-    _C.OURS.IMG_PERINS = 3 #args.img_perins
-    _C.OURS.IOU_THRES = 0.8 #args.iou_thres
-    _C.OURS.CAR_BOX = 'heaviside'
-    _C.SOLVER.IMS_PER_BATCH = 4
-    #_C.SOLVER.MAX_ITER: 3000
-    # _C.SOLVER.CLIP_GRADIENTS.ENABLED = True
-    # _C.CLIP_VALUE = 1000
-
-###############
 
 def setup(args):
     """

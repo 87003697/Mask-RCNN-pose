@@ -1,5 +1,5 @@
 MODEL:
-  META_ARCHITECTURE: "GeneralizedRCNN"
+  META_ARCHITECTURE: "Multi_MetaArch"
   PROPOSAL_GENERATOR:
     NAME: "RPN"  
   RPN:
