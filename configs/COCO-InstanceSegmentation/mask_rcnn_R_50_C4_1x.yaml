@@ -4,3 +4,6 @@ MODEL:
   MASK_ON: True
   RESNETS:
     DEPTH: 50
+DATASETS:
+  TRAIN: ("keypoints_coco_2017_train",)
+  TEST: ("keypoints_coco_2017_val",)
