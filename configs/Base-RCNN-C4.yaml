@@ -1,5 +1,5 @@
 MODEL:
-  META_ARCHITECTURE: "Multi_MetaArch"
+  META_ARCHITECTURE: "GeneralizedRCNN" #Multi_MetaArch
   RPN:
     PRE_NMS_TOPK_TEST: 6000
     POST_NMS_TOPK_TEST: 1000
