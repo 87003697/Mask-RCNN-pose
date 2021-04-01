@@ -1,1 +1,17 @@
 # detectron2_meta_arch
+
+## Load dataset
+
+```
+$ mkdir datasets
+$ cd datasets
+$ mkdir coco
+```
+Download COCO dataset into this directory, including [train](http://images.cocodataset.org/zips/train2017.zip), [validation](http://images.cocodataset.org/zips/val2017.zip) and [corresponding annotation](http://images.cocodataset.org/annotations/annotations_trainval2017.zip), unzip these zip files.
+
+## Training
+```
+python train_net.py --config configs/COCO-Multitask/Base-xxxx
+```
+
+
