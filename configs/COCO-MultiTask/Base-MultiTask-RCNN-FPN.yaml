@@ -1,5 +1,6 @@
 _BASE_: "../Base-RCNN-FPN.yaml"
 MODEL:
+  META_ARCHITECTURE: Multi_MetaArch
   KEYPOINT_ON: True
   MASK_ON: True
   ROI_HEADS:
