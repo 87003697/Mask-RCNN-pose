@@ -23,6 +23,14 @@ from detectron2.modeling.proposal_generator import build_proposal_generator
 from detectron2.modeling import build_roi_heads
 from detectron2.modeling.meta_arch.build import META_ARCH_REGISTRY
 import pdb
+
+from detectron2.utils.visualizer import Visualizer
+from detectron2.data import MetadataCatalog
+import os
+import matplotlib.pyplot as plt
+import copy
+from detectron2.utils.visualizer import ColorMode
+
 __all__ = ["Multi_MetaArch"]
 
 
@@ -46,6 +54,7 @@ class Multi_MetaArch(nn.Module):
         pixel_std: Tuple[float],
         input_format: Optional[str] = None,
         vis_period: int = 0,
+        metadata
     ):
         """
         NOTE: this interface is experimental.
@@ -75,9 +84,15 @@ class Multi_MetaArch(nn.Module):
             self.pixel_mean.shape == self.pixel_std.shape
         ), f"{self.pixel_mean} and {self.pixel_std} have different shapes!"
 
+        self.metadata = metadata
+        self.vis_dir = 'visualization'
+        if os.path.isdir(self.vis_dir):
+            os.mkdir(self.vis_dir)
+
     @classmethod
     def from_config(cls, cfg):
         backbone = build_backbone(cfg)
+        metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0])
         return {
             "backbone": backbone,
             "proposal_generator": build_proposal_generator(cfg, backbone.output_shape()),
@@ -86,6 +101,7 @@ class Multi_MetaArch(nn.Module):
             "vis_period": cfg.VIS_PERIOD,
             "pixel_mean": cfg.MODEL.PIXEL_MEAN,
             "pixel_std": cfg.MODEL.PIXEL_STD,
+            "metadata": metadata
         }
 
     @property
@@ -179,6 +195,7 @@ class Multi_MetaArch(nn.Module):
         batched_inputs: Tuple[Dict[str, torch.Tensor]],
         detected_instances: Optional[List[Instances]] = None,
         do_postprocess: bool = True,
+        do_visualization: bool = False, #True
     ):
         """
         Run inference on the given inputs.
@@ -196,7 +213,6 @@ class Multi_MetaArch(nn.Module):
             Otherwise, a list[Instances] containing raw network outputs.
         """
         assert not self.training
-
         images = self.preprocess_image(batched_inputs)
         features = self.backbone(images.tensor)
 
@@ -211,12 +227,49 @@ class Multi_MetaArch(nn.Module):
         else:
             detected_instances = [x.to(self.device) for x in detected_instances]
             results = self.roi_heads.forward_with_given_boxes(features, detected_instances)
-
+            # results dict_keys(['pred_boxes', 'scores', 'pred_classes', 'pred_masks', 'pred_keypoints', 'pred_keypoint_heatmaps'])
+        
         if do_postprocess:
             assert not torch.jit.is_scripting(), "Scripting is not supported for postprocess."
-            return GeneralizedRCNN._postprocess(results, batched_inputs, images.image_sizes)
-        else:
-            return results
+            results = Multi_MetaArch._postprocess(results, batched_inputs, images.image_sizes)
+        if do_visualization: 
+            self.print_visualization(batched_inputs, results, do_postprocess)
+        return results
+
+    
+    def print_visualization(self, batched_inputs, results, do_postprocess):
+        assert do_postprocess
+        # TODO: what if do_postprocess is false
+        for image, result in zip(batched_inputs, results):
+            image_array = image['image'].cpu().numpy().transpose([1,2,0])
+            # pred_boxes = result['instances'].get('pred_boxes')
+            # pred_masks = result['instances'].get('pred_masks')
+            # pred_keypoints = result['instances'].get('pred_keypoints')
+            # pred_keypoint_heatmaps = result['instances'].get('pred_keypoint_heatmaps')
+            v = Visualizer(image_array[:, :, ::-1], self.metadata,scale = 1.2,instance_mode=ColorMode.IMAGE_BW)
+            pdb.set_trace()
+
+            v.draw_instance_predictions(result['instances'].to("cpu"))
+            res = v.get_image()
+
+            image_name = image['file_name'].split('/')[3]
+            path = os.path.join(self.vis_dir, image_name)
+            plt.imsave(path, res)
+
+            # kp_intances = copy.deepcopy(result['instances'])
+            # kp_intances.remove('pred_masks')
+            # seg_instances = copy.deepcopy(result['instances'])
+            # seg_instances.remove('pred_keypoints')
+            # seg_instances.remove('pred_keypoint_heatmaps')
+
+            # out_kp = v.draw_instance_predictions(kp_intances.to("cpu"))
+            # res_kp = out_kp.get_image()
+            # out_seg = v.draw_instance_predictions(seg_instances.to("cpu"))
+            # res_seg = out_seg.get_image()
+
+            
+        
+
 
     def preprocess_image(self, batched_inputs: Tuple[Dict[str, torch.Tensor]]):
         """

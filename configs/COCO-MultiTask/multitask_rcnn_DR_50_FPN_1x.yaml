@@ -1,9 +1,10 @@
 _BASE_: "Base-MultiTask-RCNN-FPN.yaml"
 MODEL:
-  WEIGHTS: "pretrained/faster_rcnn_r50_fpn_mdconv_c3-c5_1x_coco_20200130-d099253b.pth"
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
   RESNETS:
     DEPTH: 50
     DEFORM_MODULATED: true
     DEFORM_ON_PER_STAGE: [false,true,true,true]
-
+SOLVER:
+  IMS_PER_BATCH: 12
 OUTPUT_DIR: "output_DR_50_FPN"
