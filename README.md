@@ -11,7 +11,7 @@ Download COCO dataset into this directory, including [train](http://images.cocod
 
 ## Training
 ```
-python train_net.py --config configs/COCO-MultiTask/multitask_rcnn_R_50_FPN_1x.yaml
+python train_net.py --config-file configs/COCO-MultiTask/multitask_rcnn_R_50_FPN_1x.yaml
 ```
 
 
