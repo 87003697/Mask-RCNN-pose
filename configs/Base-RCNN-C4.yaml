@@ -1,5 +1,8 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN" #Multi_MetaArch
+  RESNETS:
+    DEFORM_MODULATED: true
+    DEFORM_ON_PER_STAGE: [false,true,true,false]
   RPN:
     PRE_NMS_TOPK_TEST: 6000
     POST_NMS_TOPK_TEST: 1000

@@ -31,6 +31,7 @@ import matplotlib.pyplot as plt
 import copy
 from detectron2.utils.visualizer import ColorMode
 
+
 __all__ = ["Multi_MetaArch"]
 
 
@@ -86,7 +87,7 @@ class Multi_MetaArch(nn.Module):
 
         self.metadata = metadata
         self.vis_dir = 'visualization'
-        if os.path.isdir(self.vis_dir):
+        if not os.path.exists(self.vis_dir):
             os.mkdir(self.vis_dir)
 
     @classmethod
@@ -184,7 +185,6 @@ class Multi_MetaArch(nn.Module):
             storage = get_event_storage()
             if storage.iter % self.vis_period == 0:
                 self.visualize_training(batched_inputs, proposals)
-
         losses = {}
         losses.update(detector_losses)
         losses.update(proposal_losses)
@@ -228,17 +228,28 @@ class Multi_MetaArch(nn.Module):
             detected_instances = [x.to(self.device) for x in detected_instances]
             results = self.roi_heads.forward_with_given_boxes(features, detected_instances)
             # results dict_keys(['pred_boxes', 'scores', 'pred_classes', 'pred_masks', 'pred_keypoints', 'pred_keypoint_heatmaps'])
-        
+        results = self.filter(results)
         if do_postprocess:
             assert not torch.jit.is_scripting(), "Scripting is not supported for postprocess."
-            results = Multi_MetaArch._postprocess(results, batched_inputs, images.image_sizes)
+            results_print = Multi_MetaArch._postprocess_2(results, batched_inputs, images.image_sizes)
+            results_real = Multi_MetaArch._postprocess(results, batched_inputs, images.image_sizes)
         if do_visualization: 
-            self.print_visualization(batched_inputs, results, do_postprocess)
-        return results
+            self.print_visualization(batched_inputs, results_print, do_postprocess)
+        return results_real
+
+    def filter(self, results,  score_thres: float=0.5):
+        filtered_results = []
+        for result in results:
+            scores = result.scores
+            filtered_result = result[scores > score_thres]
+            filtered_results.append(filtered_result)
+        return filtered_results
+
+            
 
     
     def print_visualization(self, batched_inputs, results, do_postprocess):
-        assert do_postprocess
+        # assert do_postprocess
         # TODO: what if do_postprocess is false
         for image, result in zip(batched_inputs, results):
             image_array = image['image'].cpu().numpy().transpose([1,2,0])
@@ -247,10 +258,8 @@ class Multi_MetaArch(nn.Module):
             # pred_keypoints = result['instances'].get('pred_keypoints')
             # pred_keypoint_heatmaps = result['instances'].get('pred_keypoint_heatmaps')
             v = Visualizer(image_array[:, :, ::-1], self.metadata,scale = 1.2,instance_mode=ColorMode.IMAGE_BW)
-            pdb.set_trace()
-
-            v.draw_instance_predictions(result['instances'].to("cpu"))
-            res = v.get_image()
+            out = v.draw_instance_predictions(result['instances'].to("cpu"))
+            res = out.get_image()
 
             image_name = image['file_name'].split('/')[3]
             path = os.path.join(self.vis_dir, image_name)
@@ -290,8 +299,29 @@ class Multi_MetaArch(nn.Module):
         for results_per_image, input_per_image, image_size in zip(
             instances, batched_inputs, image_sizes
         ):
-            height = input_per_image.get("height", image_size[0])
+            height = input_per_image.get("height", image_size[0]) #input_per_image = dict
             width = input_per_image.get("width", image_size[1])
+            # height = image_size[0]
+            # width = image_size[1]
             r = detector_postprocess(results_per_image, height, width)
             processed_results.append({"instances": r})
         return processed_results
+
+    @staticmethod
+    def _postprocess_2(instances, batched_inputs: Tuple[Dict[str, torch.Tensor]], image_sizes):
+        """
+        Rescale the output instances to the target size.
+        """
+        # note: private function; subject to changes
+        processed_results = []
+        for results_per_image, input_per_image, image_size in zip(
+            instances, batched_inputs, image_sizes
+        ):
+            # height = input_per_image.get("height", image_size[0]) #input_per_image = dict
+            # width = input_per_image.get("width", image_size[1])
+            height = image_size[0]
+            width = image_size[1]
+            r = detector_postprocess(results_per_image, height, width)
+            processed_results.append({"instances": r})
+        return processed_results
+

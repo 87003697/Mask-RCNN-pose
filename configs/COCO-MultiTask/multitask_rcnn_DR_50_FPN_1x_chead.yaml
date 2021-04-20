@@ -1,0 +1,12 @@
+_BASE_: "Base-MultiTask-RCNN-FPN.yaml"
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  RESNETS:
+    DEPTH: 50
+    DEFORM_MODULATED: true
+    DEFORM_ON_PER_STAGE: [false,true,true,true]
+  ROI_KEYPOINT_HEAD:
+      NAME: "KRCNNConvDeconvUpsampleHead_custom"
+SOLVER:
+  IMS_PER_BATCH: 12
+OUTPUT_DIR: "output_DR_50_FPN_chead"
