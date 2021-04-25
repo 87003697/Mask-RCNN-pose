@@ -195,7 +195,7 @@ class Multi_MetaArch(nn.Module):
         batched_inputs: Tuple[Dict[str, torch.Tensor]],
         detected_instances: Optional[List[Instances]] = None,
         do_postprocess: bool = True,
-        do_visualization: bool = False, #True
+        do_visualization: bool = True, #True
     ):
         """
         Run inference on the given inputs.
