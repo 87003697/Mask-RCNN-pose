@@ -26,4 +26,9 @@ $ ln -s <your coco path>/annotations ./
 So far your coco has been tracked by Detectron2.
 
 ### Training
-We placed multiple training configuration files in the `configs` directory, choose one and start up your training. Take our final config `configs`
+We placed multiple training configuration files in the `configs` directory, choose one and start up your training. Take our final config `configs/COCO-MultiTask/multitask_rcnn_DR_50_FPN_1x_chead.yaml` as the example, run
+```
+python train_net.py --config-file configs/COCO-MultiTask/multitask_rcnn_DR_50_FPN_1x_chead.yaml --num-gpus <your number of gpus>
+```
+
+
