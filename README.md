@@ -4,9 +4,12 @@ This is the repository of our final project in [EECS6691](https://courseworks2.c
 
 Our code is built on [Detectron2](https://github.com/facebookresearch/detectron2/tree/72059968a2b2337ab34c86ddcbfc2f22e6914ff3), it's a marvellous framework on top of pytorch in the domain of detection and estimation. It simplifies our code and maintaining the code becomes even clear and comfortable.
 
+## Performance
+
+
 ## Environment
 Up-to-date environment requirement (March 2020) is cuda 10.1, python 3.8+, pytorch 1.7.0+. 
 
 ## Setup
 ### Dataset 
-Our model uses [COCO 2017](https://cocodataset.org/#home)
+Our model uses [COCO 2017](https://cocodataset.org/#home), 
