@@ -31,4 +31,13 @@ We placed multiple training configuration files in the `configs` directory, choo
 python train_net.py --config-file configs/COCO-MultiTask/multitask_rcnn_DR_50_FPN_1x_chead.yaml --num-gpus <your number of gpus>
 ```
 
+### Testing
+After the training, the framework turns directly into testing mode, but if you want to test yourself, run the following command, take the same config as example
+```
+python train_net.py --config-file configs/COCO-MultiTask/multitask_rcnn_DR_50_FPN_1x_chead.yaml --num-gpus <your number of gpus> --eval-only
+```
+You will see the result displayed on your terminal.
+
+### Visualization
+Our code also support visualize your model performance. After the testing is all set, there will be a `visualization` directory in the root directory. Check the model performance through the images there!
 
