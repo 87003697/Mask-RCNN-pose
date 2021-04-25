@@ -12,4 +12,14 @@ Up-to-date environment requirement (March 2020) is cuda 10.1, python 3.8+, pytor
 
 ## Setup
 ### Dataset 
-Our model uses [COCO 2017](https://cocodataset.org/#home), 
+Our model uses [COCO 2017](https://cocodataset.org/#home). Under Linux run the following command at the repo root directory.
+
+```
+$ mkdir datasets
+$ cd datasets
+$ mkdir coco
+$ cd coco
+$ ln -s <your coco path>/train2017 ./
+$ ln -s <your coco path>/val2017 ./
+$ ln -s <your coco path>/annotations ./
+``` 
