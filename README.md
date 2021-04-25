@@ -5,7 +5,9 @@ This is the repository of our final project in [EECS6691](https://courseworks2.c
 Our code is built on [Detectron2](https://github.com/facebookresearch/detectron2/tree/72059968a2b2337ab34c86ddcbfc2f22e6914ff3), it's a marvellous framework on top of pytorch in the domain of detection and estimation. It simplifies our code and maintaining the code becomes even clear and comfortable.
 ![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/demo/1.png)
 ## Performance
-
+![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/1.png)
+![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/2.png)
+![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/3.png)
 
 ## Environment
 Up-to-date environment requirement (March 2020) is cuda 10.1, python 3.8+, pytorch 1.7.0+. 
