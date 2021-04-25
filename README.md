@@ -23,3 +23,7 @@ $ ln -s <your coco path>/train2017 ./
 $ ln -s <your coco path>/val2017 ./
 $ ln -s <your coco path>/annotations ./
 ``` 
+So far your coco has been tracked by Detectron2.
+
+### Training
+We placed multiple training configuration files in the `configs` directory, choose one and start up your training. Take our final config `configs`
