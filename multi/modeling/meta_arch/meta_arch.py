@@ -249,6 +249,20 @@ class Multi_MetaArch(nn.Module):
 
     
     def print_visualization(self, batched_inputs, results, do_postprocess):
+        """
+        Visualize the results
+        Args:
+            batched_inputs: a list, batched outputs of :class:`DatasetMapper` .
+                Each item in the list contains the inputs for one image.
+                For now, each item in the list is a dict that contains:
+                * image: Tensor, image in (C, H, W) format.
+                * instances (optional): groundtruth :class:`Instances`
+                * proposals (optional): :class:`Instances`, precomputed proposals.
+                Other information that's included in the original dicts, such as:
+                * "height", "width" (int): the output resolution of the model, used in inference.
+                  See :meth:`postprocess` for details.
+            results: the prediction from model in the format of 'Instance' structure
+        """
         # assert do_postprocess
         # TODO: what if do_postprocess is false
         for image, result in zip(batched_inputs, results):
