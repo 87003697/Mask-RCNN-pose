@@ -101,17 +101,17 @@ def main(args):
         model = Trainer.build_model(cfg)
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
             cfg.MODEL.WEIGHTS, resume=args.resume
-        )
-        res = Trainer.test(cfg, model)
+        ) # load in saved model
+        res = Trainer.test(cfg, model) # start testing
         return res
 
     trainer = Trainer(cfg)
-    trainer.resume_or_load(resume=args.resume)
-    return trainer.train()
+    trainer.resume_or_load(resume=args.resume) # load in checkpoint if needed
+    return trainer.train() #start training
 
 
 if __name__ == "__main__":
-    args = default_argument_parser().parse_args()
+    args = default_argument_parser().parse_args() #parse args to main 
     print("Command Line Args:", args)
     
     
@@ -122,4 +122,4 @@ if __name__ == "__main__":
         machine_rank=args.machine_rank,
         dist_url=args.dist_url,
         args=(args,),
-    )
+    ) # distributed training
