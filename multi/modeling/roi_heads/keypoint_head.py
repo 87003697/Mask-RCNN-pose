@@ -207,9 +207,10 @@ class BaseKeypointRCNNHead(nn.Module):
 @ROI_KEYPOINT_HEAD_REGISTRY.register()
 class KRCNNConvDeconvUpsampleHead_custom(BaseKeypointRCNNHead, nn.Sequential):
     """
-    A standard keypoint head containing a series of 3x3 convs, followed by
+    A custom keypoint head containing a series of 3x3 convs, followed by
     a transpose convolution and bilinear interpolation for upsampling.
     It is described in Sec. 5 of :paper:`Mask R-CNN`.
+    The change against conventional head is changing conv to deformable conv in some layers
     """
 
     @configurable
