@@ -6,9 +6,9 @@ Our code is built on [Detectron2](https://github.com/facebookresearch/detectron2
 ![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/demo/1.png)
 ## Performance
 Our proposal increases the performance. All metrics check below
-![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/1.png)
-![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/2.png)
-![](https://github.com/ecbme6040/e6691-2021spring-project-jyzm-jy3114-zm2354/blob/main/tables/3.png)
+![](https://github.com/87003697/Mask-RCNN-pose/blob/main/tables/1.png)
+![](https://github.com/87003697/Mask-RCNN-pose/blob/main/tables/2.png)
+![](https://github.com/87003697/Mask-RCNN-pose/blob/main/tables/3.png)
 
 ## Environment
 Up-to-date environment requirement (March 2020) is cuda 10.1, python 3.8+, pytorch 1.7.0+. 
